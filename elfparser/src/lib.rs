@@ -74,7 +74,7 @@ pub struct ProgramHeader {
 
 impl ProgramHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<Header>() { return None; }
+        if binary.len() <= mem::size_of::<ProgramHeader>() { return None; }
         Some(ProgramHeader {
             seg_type: binary.read_u32::<LittleEndian>().unwrap(),
             flags   : binary.read_u32::<LittleEndian>().unwrap(),
