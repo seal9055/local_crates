@@ -6,7 +6,7 @@ pub const ARCH64:       u8  = 0x2;
 pub const LITTLEENDIAN: u8  = 0x1;
 pub const TYPEEXEC:     u16 = 0x2;
 pub const LOADSEGMENT:  u32 = 0x1;
-pub const RISCV:        u16 = 0x3f;
+pub const RISCV:        u16 = 0xf3;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Header {
@@ -34,6 +34,7 @@ pub struct Header {
 
 impl Header {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
+        println!("I have been hit");
         if binary.len() <= mem::size_of::<Header>() { return None; }
         Some(Header {
             magic            : binary.read_u32::<LittleEndian>().unwrap(),
