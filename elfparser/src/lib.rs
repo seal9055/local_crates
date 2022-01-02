@@ -104,7 +104,7 @@ pub struct SectionHeader {
 
 impl SectionHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<SectionHeader>() { return None; }
+        if binary.len() <= mem::size_of::<SectionHeader>() { println!("WTF"); return None; }
         Some(SectionHeader {
             s_name:      binary.read_u32::<LittleEndian>().unwrap(),
             s_type:      binary.read_u32::<LittleEndian>().unwrap(),
