@@ -104,7 +104,7 @@ pub struct SectionHeader {
 
 impl SectionHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<ProgramHeader>() { return None; }
+        if binary.len() <= mem::size_of::<SectionHeader>() { return None; }
         Some(SectionHeader {
             s_name:      binary.read_u32::<LittleEndian>().unwrap(),
             s_type:      binary.read_u32::<LittleEndian>().unwrap(),
@@ -120,6 +120,26 @@ impl SectionHeader {
     }
 }
 
+#[derive(Debug, Copy, Clone)]
+pub struct SymbolTable {
+    pub sym_name:  u32,
+    pub sym_info:  u8,
+    pub sym_other: u8,
+    pub sym_shndx: u16,
+    pub sym_value: usize,
+    pub sym_size:  usize,
+}
 
-
-
+impl SymbolTable {
+    pub fn new(mut binary: &[u8]) -> Option<Self> {
+        if binary.len() <= mem::size_of::<SymbolTable>() { return None; }
+        Some(SymbolTable {
+            sym_name:  binary.read_u32::<LittleEndian>().unwrap(),
+            sym_info:  binary.read_u8::<>().unwrap(),
+            sym_other: binary.read_u8::<>().unwrap(),
+            sym_shndx: binary.read_u16::<LittleEndian>().unwrap(),
+            sym_value: binary.read_u64::<LittleEndian>().unwrap() as usize,
+            sym_size:  binary.read_u64::<LittleEndian>().unwrap() as usize,
+        })
+    }
+}
