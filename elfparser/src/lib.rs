@@ -34,7 +34,6 @@ pub struct Header {
 
 impl Header {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        println!("I have been hit");
         if binary.len() <= mem::size_of::<Header>() { return None; }
         Some(Header {
             magic            : binary.read_u32::<LittleEndian>().unwrap(),
