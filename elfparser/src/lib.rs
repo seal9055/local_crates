@@ -34,7 +34,7 @@ pub struct Header {
 
 impl Header {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<Header>() { return None; }
+        if binary.len() < mem::size_of::<Header>() { return None; }
         Some(Header {
             magic            : binary.read_u32::<LittleEndian>().unwrap(),
             bitsize          : binary.read_u8::<>().unwrap(),
@@ -74,7 +74,7 @@ pub struct ProgramHeader {
 
 impl ProgramHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<ProgramHeader>() { return None; }
+        if binary.len() < mem::size_of::<ProgramHeader>() { return None; }
         Some(ProgramHeader {
             seg_type: binary.read_u32::<LittleEndian>().unwrap(),
             flags   : binary.read_u32::<LittleEndian>().unwrap(),
@@ -104,7 +104,7 @@ pub struct SectionHeader {
 
 impl SectionHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() < mem::size_of::<SectionHeader>() { println!("WTF"); return None; }
+        if binary.len() < mem::size_of::<SectionHeader>() { return None; }
         Some(SectionHeader {
             s_name:      binary.read_u32::<LittleEndian>().unwrap(),
             s_type:      binary.read_u32::<LittleEndian>().unwrap(),
@@ -132,7 +132,7 @@ pub struct SymbolTable {
 
 impl SymbolTable {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() <= mem::size_of::<SymbolTable>() { return None; }
+        if binary.len() < mem::size_of::<SymbolTable>() { return None; }
         Some(SymbolTable {
             sym_name:  binary.read_u32::<LittleEndian>().unwrap(),
             sym_info:  binary.read_u8::<>().unwrap(),
