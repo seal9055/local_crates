@@ -87,3 +87,39 @@ impl ProgramHeader {
         })
     }
 }
+
+#[derive(Debug, Copy, Clone)]
+pub struct SectionHeader {
+    pub s_name:      u32,
+    pub s_type:      u32,
+    pub s_flags:     usize,
+    pub s_addr:      usize,
+    pub s_offset:    usize,
+    pub s_size:      usize,
+    pub s_link:      u32,
+    pub s_info:      u32,
+    pub s_addralign: usize,
+    pub s_entsize:   usize,
+}
+
+impl SectionHeader {
+    pub fn new(mut binary: &[u8]) -> Option<Self> {
+        if binary.len() <= mem::size_of::<ProgramHeader>() { return None; }
+        Some(SectionHeader {
+            s_name:      binary.read_u32::<LittleEndian>().unwrap(),
+            s_type:      binary.read_u32::<LittleEndian>().unwrap(),
+            s_flags:     binary.read_u64::<LittleEndian>().unwrap() as usize,
+            s_addr:      binary.read_u64::<LittleEndian>().unwrap() as usize,
+            s_offset:    binary.read_u64::<LittleEndian>().unwrap() as usize,
+            s_size:      binary.read_u64::<LittleEndian>().unwrap() as usize,
+            s_link:      binary.read_u32::<LittleEndian>().unwrap(),
+            s_info:      binary.read_u32::<LittleEndian>().unwrap(),
+            s_addralign: binary.read_u64::<LittleEndian>().unwrap() as usize,
+            s_entsize:   binary.read_u64::<LittleEndian>().unwrap() as usize,
+        })
+    }
+}
+
+
+
+
