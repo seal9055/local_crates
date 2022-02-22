@@ -2,14 +2,17 @@
 pub struct SortedVec<A: Clone>(pub Vec<A>, pub Vec<usize>);
 
 impl <A: Clone>SortedVec<A> {
+    /// Default empty vector
     pub fn default() -> Self {
         SortedVec(Vec::new(), Vec::new())
     }
 
+    /// Get length of vector
     pub fn len(&self) -> usize {
         self.0.len()
     }
 
+    /// Insert an entry that is automatically sorted in
     pub fn insert(&mut self, entry: A, priority: usize) {
         let mut i = 0;
         for e in &self.1 {
@@ -22,9 +25,16 @@ impl <A: Clone>SortedVec<A> {
         self.1.insert(i, priority);
     }
 
+    /// Remove a specific entry
     pub fn remove(&mut self, index: usize) {
         self.0.remove(index);
         self.1.remove(index);
+    }
+
+    /// Remove last entry
+    pub fn pop(&mut self) {
+        self.0.pop();
+        self.1.pop();
     }
 }
 
