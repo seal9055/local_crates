@@ -1,5 +1,5 @@
 /// Super simple vector that is maintained in a sorted state using a priority number
-pub struct SortedVec<A: Clone>(Vec<A>, Vec<usize>);
+pub struct SortedVec<A: Clone>(pub Vec<A>, pub Vec<usize>);
 
 impl <A: Clone>SortedVec<A> {
     pub fn default() -> Self {
