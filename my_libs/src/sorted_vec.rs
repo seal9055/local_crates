@@ -25,16 +25,16 @@ impl <A: Clone>SortedVec<A> {
         self.1.insert(i, priority);
     }
 
-    /// Remove a specific entry
-    pub fn remove(&mut self, index: usize) {
-        self.0.remove(index);
+    /// Remove a specific entry and return it
+    pub fn remove(&mut self, index: usize) -> A {
         self.1.remove(index);
+        self.0.remove(index)
     }
 
-    /// Remove last entry
-    pub fn pop(&mut self) {
-        self.0.pop();
+    /// Remove last entry and return it
+    pub fn pop(&mut self) -> Option<A> {
         self.1.pop();
+        self.0.pop()
     }
 }
 
