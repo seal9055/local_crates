@@ -13,7 +13,7 @@ impl <A: Clone>SortedVec<A> {
     }
 
     /// Insert an entry that is automatically sorted in
-    pub fn insert(&mut self, entry: A, priority: usize) {
+    pub fn insert(&mut self, entry: A, priority: isize) {
         let mut i = 0;
         for e in &self.1 {
             if priority < *e {
