@@ -1,24 +1,12 @@
 use byteorder::{LittleEndian, ReadBytesExt};
+use std::{mem};
 
 pub const ELFMAGIC:     u32 = 0x464c457f;
-
-#[derive(Debug, Clone)]
-pub struct ELF {
-    pub header: Header,
-    pub program_headers: Vec<ProgramHeader>,
-}
-
-impl ELF {
-    pub fn parse_elf(buf: &[u8]) -> Self {
-        let header = Header::new(buf).expect("Failed to parse elf header");
-        let program_headers = ProgramHeader::parse_headers(&header, buf).unwrap();
-        assert_eq!(header.magic, ELFMAGIC, "Not an elf");
-        Self {
-            header,
-            program_headers,
-        }
-    }
-}
+pub const ARCH64:       u8  = 0x2;
+pub const LITTLEENDIAN: u8  = 0x1;
+pub const TYPEEXEC:     u16 = 0x2;
+pub const LOADSEGMENT:  u32 = 0x1;
+pub const RISCV:        u16 = 0xf3;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Header {
@@ -46,7 +34,7 @@ pub struct Header {
 
 impl Header {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() < std::mem::size_of::<Header>() { return None; }
+        if binary.len() < mem::size_of::<Header>() { return None; }
         Some(Header {
             magic            : binary.read_u32::<LittleEndian>().unwrap(),
             bitsize          : binary.read_u8::<>().unwrap(),
@@ -86,7 +74,7 @@ pub struct ProgramHeader {
 
 impl ProgramHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() < std::mem::size_of::<ProgramHeader>() { return None; }
+        if binary.len() < mem::size_of::<ProgramHeader>() { return None; }
         Some(ProgramHeader {
             seg_type: binary.read_u32::<LittleEndian>().unwrap(),
             flags   : binary.read_u32::<LittleEndian>().unwrap(),
@@ -97,19 +85,6 @@ impl ProgramHeader {
             memsz   : binary.read_u64::<LittleEndian>().unwrap() as usize,
             align   : binary.read_u64::<LittleEndian>().unwrap() as usize,
         })
-    }
-
-    pub fn parse_headers(elf_hdr: &Header, buf: &[u8]) -> Option<Vec<Self>> {
-        let mut offset = elf_hdr.phoff - elf_hdr.phentsize as usize;
-        let mut program_headers = Vec::new();
-        for _ in 0..elf_hdr.phnum {
-            offset += elf_hdr.phentsize as usize;
-            let program_hdr = ProgramHeader::new(&buf[offset..])?;
-
-            program_headers.push(program_hdr);
-        }
-
-        Some(program_headers)
     }
 }
 
@@ -129,7 +104,7 @@ pub struct SectionHeader {
 
 impl SectionHeader {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() < std::mem::size_of::<SectionHeader>() { return None; }
+        if binary.len() < mem::size_of::<SectionHeader>() { return None; }
         Some(SectionHeader {
             s_name:      binary.read_u32::<LittleEndian>().unwrap(),
             s_type:      binary.read_u32::<LittleEndian>().unwrap(),
@@ -157,7 +132,7 @@ pub struct SymbolTable {
 
 impl SymbolTable {
     pub fn new(mut binary: &[u8]) -> Option<Self> {
-        if binary.len() < std::mem::size_of::<SymbolTable>() { return None; }
+        if binary.len() < mem::size_of::<SymbolTable>() { return None; }
         Some(SymbolTable {
             sym_name:  binary.read_u32::<LittleEndian>().unwrap(),
             sym_info:  binary.read_u8::<>().unwrap(),
