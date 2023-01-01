@@ -6,7 +6,9 @@ pub const BITSZ64:      u8  = 0x2;
 pub const LITTLEENDIAN: u8  = 0x1;
 pub const TYPEEXEC:     u16 = 0x2;
 pub const LOADSEGMENT:  u32 = 0x1;
-pub const RISCV:        u16 = 0xf3;
+pub const RISCV:        u16 = 0x3e;
+pub const X86_64:       u16 = 0xf3;
+pub const ARCH64:       u8  = 0x2;
 
 #[derive(Debug, Clone)]
 pub struct ELF {
